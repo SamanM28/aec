@@ -1,0 +1,33 @@
+// Full Adder
+module Full_Adder(input A, input B, input Cin, output Sum, output Carry);
+    assign Sum = A ^ B ^ Cin;
+    assign Carry = (A & B) | (B & Cin) | (A & Cin);
+endmodule
+
+// 4-Bit Parallel Adder
+module Parallel_Adder_4Bit(input [3:0] A, input [3:0] B, input Cin, output [3:0] Sum, output Carry);
+    wire [3:0] Carry_Internal;
+
+    Full_Adder FA0 (.A(A[0]), .B(B[0]), .Cin(Cin), .Sum(Sum[0]), .Carry(Carry_Internal[0]));
+    Full_Adder FA1 (.A(A[1]), .B(B[1]), .Cin(Carry_Internal[0]), .Sum(Sum[1]), .Carry(Carry_Internal[1]));
+    Full_Adder FA2 (.A(A[2]), .B(B[2]), .Cin(Carry_Internal[1]), .Sum(Sum[2]), .Carry(Carry_Internal[2]));
+    Full_Adder FA3 (.A(A[3]), .B(B[3]), .Cin(Carry_Internal[2]), .Sum(Sum[3]), .Carry(Carry));
+endmodule
+
+module Testbench_Parallel_Adder_4Bit;
+    reg [3:0] A, B;
+    reg Cin;
+    wire [3:0] Sum;
+    wire Carry;
+
+    Parallel_Adder_4Bit parallel_adder (.A(A), .B(B), .Cin(Cin), .Sum(Sum), .Carry(Carry));
+
+    initial begin
+        $monitor("A=%b, B=%b, Cin=%b, Sum=%b, Carry=%b", A, B, Cin, Sum, Carry);
+        A = 4'b0000; B = 4'b0000; Cin = 0; #10;
+        A = 4'b0001; B = 4'b0010; Cin = 0; #10;
+        A = 4'b0110; B = 4'b0101; Cin = 1; #10;
+        A = 4'b1111; B = 4'b0001; Cin = 0; #10;
+        A = 4'b1111; B = 4'b1111; Cin = 1; #10;
+    end
+endmodule
