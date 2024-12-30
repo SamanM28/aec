@@ -15,12 +15,6 @@ endmodule
 
 
 
-
-
-
-
-
-
 `timescale 1ns / 1ps
 
 module SR_FlipFlop_tb();
@@ -54,15 +48,6 @@ module SR_FlipFlop_tb();
     end
 endmodule
 
-module D_FlipFlop(
-    input D, clk,
-    output reg Q, Qn
-);
-    always @(posedge clk) begin
-        {Q, Qn} <= {D, ~D};  // Transfer input to output
-    end
-endmodule
-
 
 
 `timescale 1ns / 1ps
@@ -101,42 +86,43 @@ endmodule
 
 
 
+module jk_flipflop (
+    input wire j, k, clk,
+    output reg q
+);
+    always @(posedge clk) begin
+        case ({j, k})
+            2'b00: q <= q;      // No change
+            2'b01: q <= 0;      // Reset
+            2'b10: q <= 1;      // Set
+            2'b11: q <= ~q;     // Toggle
+        endcase
+    end
+endmodule
 
 
 
 
 
-`timescale 1ns / 1ps
+module tb_jk_flipflop;
 
-module JK_FlipFlop_tb();
-    reg clk, J, K;
-    wire Q, Qn;
+    reg j, k, clk;  
+    wire q;  
 
-    // Instantiate the JK Flip-Flop module
-    JK_FlipFlop uut (
-        .J(J),
-        .K(K),
-        .clk(clk),
-        .Q(Q),
-        .Qn(Qn)
-    );
-
-    // Generate clock signal
-    initial clk = 0;
-    always #5 clk = ~clk;  // Clock period of 10ns
+    jk_flipflop uut (.j(j), .k(k), .clk(clk), .q(q));
 
     initial begin
-        // Monitor values
-        $monitor("Time=%0t | J=%b | K=%b | Q=%b | Qn=%b", $time, J, K, Q, Qn);
-
-        // Apply test cases
-        J = 0; K = 0; #10; // No change
-        J = 1; K = 0; #10; // Set
-        J = 0; K = 1; #10; // Reset
-        J = 1; K = 1; #10; // Toggle
-
-        $finish;  // End simulation
+        clk = 0; forever #5 clk = ~clk;
     end
+
+    initial begin
+        j = 0; k = 0; #10;
+        j = 1; k = 0; #10;
+        j = 0; k = 1; #10;
+        j = 1; k = 1; #10;
+        $stop;
+    end
+
 endmodule
 
 
@@ -149,12 +135,6 @@ module D_FlipFlop(
     end
 endmodule
 
-
-
-
-
-
-`timescale 1ns / 1ps
 
 module D_FlipFlop_tb();
     reg clk, D;
