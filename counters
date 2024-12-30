@@ -1,0 +1,98 @@
+module UpCounter(
+    input clk,
+    input rst,
+    output reg [3:0] count
+);
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            count <= 4'b0000;  // Reset the counter
+        else
+            count <= count + 1;  // Increment the counter
+    end
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module UpCounter_tb();
+    reg clk, rst;
+    wire [3:0] count;
+
+    // Instantiate the UpCounter module
+    UpCounter uut (
+        .clk(clk),
+        .rst(rst),
+        .count(count)
+    );
+
+    // Generate clock signal
+    initial clk = 0;
+    always #5 clk = ~clk;  // Clock period of 10ns
+
+    initial begin
+        // Monitor output
+        $monitor("Time=%0t | clk=%b | rst=%b | count=%b", $time, clk, rst, count);
+
+        // Apply reset
+        rst = 1; #10;
+        rst = 0; #100;  // Release reset and observe counting
+
+        $finish;  // End simulation
+    end
+endmodule
+
+module DownCounter(
+    input clk,
+    input rst,
+    output reg [3:0] count
+);
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            count <= 4'b1111;  // Reset the counter to max (4'b1111 for 4-bit)
+        else
+            count <= count - 1;  // Decrement the counter
+    end
+endmodule
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module DownCounter_tb();
+    reg clk, rst;
+    wire [3:0] count;
+
+    // Instantiate the DownCounter module
+    DownCounter uut (
+        .clk(clk),
+        .rst(rst),
+        .count(count)
+    );
+
+    // Generate clock signal
+    initial clk = 0;
+    always #5 clk = ~clk;  // Clock period of 10ns
+
+    initial begin
+        // Monitor output
+        $monitor("Time=%0t | clk=%b | rst=%b | count=%b", $time, clk, rst, count);
+
+        // Apply reset
+        rst = 1; #10;
+        rst = 0; #100;  // Release reset and observe counting
+
+        $finish;  // End simulation
+    end
+endmodule
