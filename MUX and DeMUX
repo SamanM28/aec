@@ -1,0 +1,77 @@
+module mux_4to1 (
+    input wire [3:0] i,     // 4 input lines
+    input wire [1:0] sel,   // 2-bit select line
+    output wire y           // Output
+);
+
+    assign y = (sel == 2'b00) ? i[0] :
+               (sel == 2'b01) ? i[1] :
+               (sel == 2'b10) ? i[2] :
+               (sel == 2'b11) ? i[3] : 1'b0;
+
+endmodule
+
+
+module tb_mux_4to1;
+
+    reg [3:0] i;      // Test input lines
+    reg [1:0] sel;    // Test select line
+    wire y;           // Output wire
+
+    mux_4to1 uut (
+        .i(i),
+        .sel(sel),
+        .y(y)
+    );
+
+    initial begin
+        // Test cases
+        i = 4'b1010; sel = 2'b00; #10;
+        i = 4'b1010; sel = 2'b01; #10;
+        i = 4'b1010; sel = 2'b10; #10;
+        i = 4'b1010; sel = 2'b11; #10;
+
+        $stop;
+    end
+
+endmodule
+
+
+module demux_1to4 (
+    input wire d,          // Single input
+    input wire [1:0] sel,  // 2-bit select line
+    output wire [3:0] y    // 4 output lines
+);
+
+    assign y[0] = (sel == 2'b00) ? d : 1'b0;
+    assign y[1] = (sel == 2'b01) ? d : 1'b0;
+    assign y[2] = (sel == 2'b10) ? d : 1'b0;
+    assign y[3] = (sel == 2'b11) ? d : 1'b0;
+
+endmodule
+
+
+module tb_demux_1to4;
+
+    reg d;               // Test input
+    reg [1:0] sel;       // Test select line
+    wire [3:0] y;        // Output wire
+
+    demux_1to4 uut (
+        .d(d),
+        .sel(sel),
+        .y(y)
+    );
+
+    initial begin
+        // Test cases
+        d = 1; sel = 2'b00; #10;
+        d = 1; sel = 2'b01; #10;
+        d = 1; sel = 2'b10; #10;
+        d = 1; sel = 2'b11; #10;
+
+        d = 0; sel = 2'b10; #10; // Check for inactive input
+        $stop;
+    end
+
+endmodule
