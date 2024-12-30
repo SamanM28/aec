@@ -1,0 +1,235 @@
+module SR_FlipFlop(
+    input S, R, clk,
+    output reg Q, Qn
+);
+    always @(posedge clk) begin
+        case ({S, R})
+            2'b00: ;                 // No change
+            2'b01: {Q, Qn} <= 2'b01; // Reset
+            2'b10: {Q, Qn} <= 2'b10; // Set
+            2'b11: {Q, Qn} <= 2'b00; // Invalid
+        endcase
+    end
+endmodule
+
+
+
+
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module SR_FlipFlop_tb();
+    reg clk, S, R;
+    wire Q, Qn;
+
+    // Instantiate the SR Flip-Flop module
+    SR_FlipFlop uut (
+        .S(S),
+        .R(R),
+        .clk(clk),
+        .Q(Q),
+        .Qn(Qn)
+    );
+
+    // Generate clock signal
+    initial clk = 0;
+    always #5 clk = ~clk;  // Clock period of 10ns
+
+    initial begin
+        // Monitor values
+        $monitor("Time=%0t | S=%b | R=%b | Q=%b | Qn=%b", $time, S, R, Q, Qn);
+
+        // Apply test cases
+        S = 0; R = 0; #10; // No change
+        S = 1; R = 0; #10; // Set
+        S = 0; R = 1; #10; // Reset
+        S = 1; R = 1; #10; // Invalid condition
+
+        $finish;  // End simulation
+    end
+endmodule
+
+module D_FlipFlop(
+    input D, clk,
+    output reg Q, Qn
+);
+    always @(posedge clk) begin
+        {Q, Qn} <= {D, ~D};  // Transfer input to output
+    end
+endmodule
+
+
+
+`timescale 1ns / 1ps
+
+module JK_FlipFlop_tb();
+    reg clk, J, K;
+    wire Q, Qn;
+
+    // Instantiate the JK Flip-Flop module
+    JK_FlipFlop uut (
+        .J(J),
+        .K(K),
+        .clk(clk),
+        .Q(Q),
+        .Qn(Qn)
+    );
+
+    // Generate clock signal
+    initial clk = 0;
+    always #5 clk = ~clk;  // Clock period of 10ns
+
+    initial begin
+        // Monitor values
+        $monitor("Time=%0t | J=%b | K=%b | Q=%b | Qn=%b", $time, J, K, Q, Qn);
+
+        // Apply test cases
+        J = 0; K = 0; #10; // No change
+        J = 1; K = 0; #10; // Set
+        J = 0; K = 1; #10; // Reset
+        J = 1; K = 1; #10; // Toggle
+
+        $finish;  // End simulation
+    end
+endmodule
+
+
+
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module JK_FlipFlop_tb();
+    reg clk, J, K;
+    wire Q, Qn;
+
+    // Instantiate the JK Flip-Flop module
+    JK_FlipFlop uut (
+        .J(J),
+        .K(K),
+        .clk(clk),
+        .Q(Q),
+        .Qn(Qn)
+    );
+
+    // Generate clock signal
+    initial clk = 0;
+    always #5 clk = ~clk;  // Clock period of 10ns
+
+    initial begin
+        // Monitor values
+        $monitor("Time=%0t | J=%b | K=%b | Q=%b | Qn=%b", $time, J, K, Q, Qn);
+
+        // Apply test cases
+        J = 0; K = 0; #10; // No change
+        J = 1; K = 0; #10; // Set
+        J = 0; K = 1; #10; // Reset
+        J = 1; K = 1; #10; // Toggle
+
+        $finish;  // End simulation
+    end
+endmodule
+
+
+module D_FlipFlop(
+    input D, clk,
+    output reg Q, Qn
+);
+    always @(posedge clk) begin
+        {Q, Qn} <= {D, ~D};  // Transfer input to output
+    end
+endmodule
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module D_FlipFlop_tb();
+    reg clk, D;
+    wire Q, Qn;
+
+    // Instantiate the D Flip-Flop module
+    D_FlipFlop uut (
+        .D(D),
+        .clk(clk),
+        .Q(Q),
+        .Qn(Qn)
+    );
+
+    // Generate clock signal
+    initial clk = 0;
+    always #5 clk = ~clk;  // Clock period of 10ns
+
+    initial begin
+        // Monitor values
+        $monitor("Time=%0t | D=%b | Q=%b | Qn=%b", $time, D, Q, Qn);
+
+        // Apply test cases
+        D = 0; #10;
+        D = 1; #10;
+        D = 0; #10;
+
+        $finish;  // End simulation
+    end
+endmodule
+
+module T_FlipFlop(
+    input T, clk,
+    output reg Q, Qn
+);
+    always @(posedge clk) begin
+        if (T)
+            {Q, Qn} <= ~{Q, Qn};  // Toggle output
+    end
+endmodule
+
+
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module T_FlipFlop_tb();
+    reg clk, T;
+    wire Q, Qn;
+
+    // Instantiate the T Flip-Flop module
+    T_FlipFlop uut (
+        .T(T),
+        .clk(clk),
+        .Q(Q),
+        .Qn(Qn)
+    );
+
+    // Generate clock signal
+    initial clk = 0;
+    always #5 clk = ~clk;  // Clock period of 10ns
+
+    initial begin
+        // Monitor values
+        $monitor("Time=%0t | T=%b | Q=%b | Qn=%b", $time, T, Q, Qn);
+
+        // Apply test cases
+        T = 0; #10;  // No toggle
+        T = 1; #10;  // Toggle
+        T = 0; #10;  // No toggle
+        T = 1; #10;  // Toggle
+
+        $finish;  // End simulation
+    end
+endmodule
