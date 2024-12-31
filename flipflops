@@ -50,42 +50,6 @@ endmodule
 
 
 
-`timescale 1ns / 1ps
-
-module JK_FlipFlop_tb();
-    reg clk, J, K;
-    wire Q, Qn;
-
-    // Instantiate the JK Flip-Flop module
-    JK_FlipFlop uut (
-        .J(J),
-        .K(K),
-        .clk(clk),
-        .Q(Q),
-        .Qn(Qn)
-    );
-
-    // Generate clock signal
-    initial clk = 0;
-    always #5 clk = ~clk;  // Clock period of 10ns
-
-    initial begin
-        // Monitor values
-        $monitor("Time=%0t | J=%b | K=%b | Q=%b | Qn=%b", $time, J, K, Q, Qn);
-
-        // Apply test cases
-        J = 0; K = 0; #10; // No change
-        J = 1; K = 0; #10; // Set
-        J = 0; K = 1; #10; // Reset
-        J = 1; K = 1; #10; // Toggle
-
-        $finish;  // End simulation
-    end
-endmodule
-
-
-
-
 module jk_flipflop (
     input wire j, k, clk,
     output reg q
